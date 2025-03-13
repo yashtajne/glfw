@@ -1,0 +1,55 @@
+[SETUP]
+
+project(
+    PROJ_NAME := 'glfw3',
+    PROJ_LANG := C,
+    PROJ_VERS := '3.5.0',
+)
+
+
+[BUILD]
+
+BUILD_MACRO = '-D_GLFW_OSMESA'
+
+if SYSTEM == 'Windows':
+    BUILD_MACRO = '-D_GLFW_WIN32'
+
+if SYSTEM == 'Linux':
+    BUILD_MACRO = '-D_GLFW_X11'
+
+if SYSTEM == 'Darwin':
+    BUILD_MACRO = '-D_GLFW_COCOA'
+
+
+package(
+    PROJ_NAME,
+    library(
+        PROJ_NAME,
+        STATIC,
+        *grab_sources('./src'),
+        c_args = [
+            '-I./include',
+            BUILD_MACRO,
+        ]
+    )
+).create()
+
+
+[EXAMPLE]
+
+executable(
+    'WindowsExample',
+    './examples/windows.c',
+    dependencies = [
+        PROJ_NAME
+    ],
+    c_args = [
+        '-I./include',
+        '-I./deps'
+    ],
+    link_args = [
+        '-lrt',
+        '-ldl',
+        '-lm'
+    ]
+).create()
