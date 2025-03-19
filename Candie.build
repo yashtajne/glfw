@@ -9,16 +9,25 @@ project(
 
 [BUILD]
 
-BUILD_MACRO = '-D_GLFW_OSMESA'
+BUILD_MACRO  = Arg('-D_GLFW_OSMESA'),
+BUILD_CFLAGS = [Arg('-lOSMesa')]
 
 if SYSTEM == 'Windows':
-    BUILD_MACRO = '-D_GLFW_WIN32'
+    BUILD_MACRO = Arg('-D_GLFW_WIN32'),
+    BUILD_CFLAGS = [Arg('-lgdi32')]
 
 if SYSTEM == 'Linux':
-    BUILD_MACRO = '-D_GLFW_X11'
+    BUILD_CFLAGS = [Arg('-lrt'), Arg('-lm'), Arg('-ldl')]
+
+    session_type = os.getenv("XDG_SESSION_TYPE")
+    if session_type == 'x11':
+        BUILD_MACRO = Arg('-D_GLFW_X11'),
+    else:
+        BUILD_MACRO = Arg('-D_GLFW_WAYLAND'),
 
 if SYSTEM == 'Darwin':
-    BUILD_MACRO = '-D_GLFW_COCOA'
+    BUILD_MACRO = Arg('-D_GLFW_COCOA'),
+    BUILD_CFLAGS = [Arg('-framework'), Arg('Cocoa'), Arg('-framework'), Arg('OpenGL'), Arg('-framework'), Arg('IOKit'), Arg('-framework'), Arg('CoreVideo')]
 
 
 package(
@@ -29,27 +38,11 @@ package(
         *grab_sources('./src'),
         c_args = [
             '-I./include',
-            BUILD_MACRO,
+            *BUILD_MACRO,
         ]
-    )
-).create()
-
-
-[EXAMPLE]
-
-executable(
-    'WindowsExample',
-    './examples/windows.c',
-    dependencies = [
-        PROJ_NAME
-    ],
-    c_args = [
-        '-I./include',
-        '-I./deps'
-    ],
-    link_args = [
-        '-lrt',
-        '-ldl',
-        '-lm'
-    ]
-).create()
+    ),
+    version = PROJ_VERS,
+    description = "A multi-platform library for OpenGL, window and input",
+    url = "https://www.glfw.org/",
+    cflags = BUILD_CFLAGS
+).create(debug = True).create()
