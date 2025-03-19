@@ -10,11 +10,11 @@ project(
 [BUILD]
 
 INCLUDE_ARG  = Arg('-I./include')
-BUILD_MACRO  = Arg('-D_GLFW_OSMESA'),
+BUILD_MACRO  = Arg('-D_GLFW_OSMESA')
 BUILD_CFLAGS = ['-lOSMesa']
 
 if SYSTEM == 'Windows':
-    BUILD_MACRO = Arg('-D_GLFW_WIN32'),
+    BUILD_MACRO = Arg('-D_GLFW_WIN32')
     BUILD_CFLAGS = ['-lgdi32']
 
 if SYSTEM == 'Linux':
@@ -22,12 +22,12 @@ if SYSTEM == 'Linux':
 
     session_type = os.getenv("XDG_SESSION_TYPE")
     if session_type == 'x11':
-        BUILD_MACRO = Arg('-D_GLFW_X11'),
+        BUILD_MACRO = Arg('-D_GLFW_X11')
     else:
-        BUILD_MACRO = Arg('-D_GLFW_WAYLAND'),
+        BUILD_MACRO = Arg('-D_GLFW_WAYLAND')
 
 if SYSTEM == 'Darwin':
-    BUILD_MACRO = Arg('-D_GLFW_COCOA'),
+    BUILD_MACRO = Arg('-D_GLFW_COCOA')
     BUILD_CFLAGS = ['-framework', 'Cocoa', '-framework', 'OpenGL', '-framework', 'IOKit', '-framework', 'CoreVideo']
 
 
