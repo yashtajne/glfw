@@ -9,6 +9,7 @@ project(
 
 [BUILD]
 
+INCLUDE_ARG  = Arg('-I./include')
 BUILD_MACRO  = Arg('-D_GLFW_OSMESA'),
 BUILD_CFLAGS = [Arg('-lOSMesa')]
 
@@ -37,8 +38,8 @@ package(
         STATIC,
         *grab_sources('./src'),
         c_args = [
-            '-I./include',
-            *BUILD_MACRO,
+            INCLUDE_ARG,
+            BUILD_MACRO,
         ]
     ),
     version = PROJ_VERS,
